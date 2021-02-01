@@ -15,6 +15,7 @@ def export_table(
     source,
     source_schema,
     source_table,
+    source_where,
     columns,
     temp_path_load,
     csv_delimiter,
@@ -69,6 +70,7 @@ def export_table(
                     columns,
                     source_schema,
                     source_table,
+                    source_where,
                     replication_key,
                     max_replication_key,
                     parallelization_where,
@@ -105,6 +107,7 @@ def export_table(
                 columns,
                 source_schema,
                 source_table,
+                source_where,
                 replication_key,
                 max_replication_key,
             )

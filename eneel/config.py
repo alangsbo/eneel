@@ -5,6 +5,7 @@ import eneel.adapters.postgres as postgres
 import eneel.adapters.oracle as oracle
 import eneel.adapters.sqlserver as sqlserver
 import eneel.adapters.snowflake as snowflake
+import eneel.printer as printer
 
 import logging
 
@@ -209,7 +210,10 @@ class Project:
 
     def get_loads(self):
         table_loads = self.get_table_loads()
+
         query_loads = self.get_query_loads()
+        printer.print_msg(query_loads)
+
         loads = table_loads + query_loads
         num_tables_to_load = len(loads)
         load_order = 1
@@ -318,8 +322,10 @@ class Project:
 
         # Populate load settings
         order_num = 1
+        printer.print_msg(config_queries)
         for query_config in config_queries:
             query = query_config.copy()
+            printer.print_msg(query)
             target_schema = query["target_schema"]
             del query["queries"]
             for query in query_config["queries"]:

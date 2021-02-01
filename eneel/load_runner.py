@@ -198,6 +198,7 @@ def run_load(project_load):
         source_schema = schema.get("source_schema")
         target_schema = schema.get("target_schema")
         source_table = table.get("table_name")
+        source_where = table.get("where")
         full_source_table = source_schema + "." + source_table
         target_table = (
             schema.get("table_prefix", "")
@@ -241,6 +242,7 @@ def run_load(project_load):
                 source,
                 source_schema,
                 source_table,
+                source_where,
                 columns,
                 temp_path_load,
                 csv_delimiter,
@@ -324,7 +326,6 @@ def run_load(project_load):
 
     # QUERIES
     if project_load.get("query"):
-
         # Load details
         query_item = project_load.get("query")
         query_name = query_item.get("query_name")

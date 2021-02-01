@@ -131,6 +131,7 @@ class Database:
     ):
         try:
             server_db = "{}:{}/{}".format(server, port, database)
+            logger.info(server_db)
             self._server = server
             self._user = user
             self._password = password
@@ -302,6 +303,13 @@ class Database:
                 columns_to_keep.remove(column)
         return columns_to_keep
 
+    #SELECT
+    #count(*)
+    #FROM
+    #user_views
+    #WHERE
+    #view_name = 'MY_VIEW'
+
     def check_table_exist(self, table_name):
         try:
             check_statement = (
@@ -316,7 +324,7 @@ class Database:
             if exists:
                 return True
             else:
-                return False
+                return True
         except:
             logger.error("Failed checking table exist")
 
@@ -363,6 +371,7 @@ class Database:
         columns,
         schema,
         table,
+        where,
         replication_key=None,
         max_replication_key=None,
         parallelization_where=None,
@@ -377,20 +386,25 @@ class Database:
 
         select_stmt += " FROM " + schema + "." + table
 
-        # Where-claues for incremental replication
-        if replication_key:
-            replication_where = (
-                replication_key + " > " + "'" + max_replication_key + "'"
-            )
+        # AL if there is a where set on the table object
+        if len(where) > 0:
+            select_stmt += " WHERE " + where
         else:
-            replication_where = None
 
-        wheres = replication_where, self._table_where_clause, parallelization_where
-        wheres = [x for x in wheres if x is not None]
-        if len(wheres) > 0:
-            select_stmt += " WHERE " + wheres[0]
-            for where in wheres[1:]:
-                select_stmt += " AND " + where
+            # Where-claues for incremental replication
+            if replication_key:
+                replication_where = (
+                    replication_key + " > " + "'" + max_replication_key + "'"
+                )
+            else:
+                replication_where = None
+
+            wheres = replication_where, self._table_where_clause, parallelization_where
+            wheres = [x for x in wheres if x is not None]
+            if len(wheres) > 0:
+                select_stmt += " WHERE " + wheres[0]
+                for where in wheres[1:]:
+                    select_stmt += " AND " + where
 
         if self._limit_rows:
             select_stmt += " FETCH FIRST " + str(self._limit_rows) + " ROW ONLY"

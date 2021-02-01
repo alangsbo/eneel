@@ -419,6 +419,7 @@ class Database:
         columns,
         schema,
         table,
+        where,
         replication_key=None,
         max_replication_key=None,
         parallelization_where=None,
@@ -444,8 +445,13 @@ class Database:
             + "].["
             + table
             + "]"
-            + " WITH (NOLOCK)"
+
         )
+
+        if len(where) > 0:
+            select_stmt += " WHERE " + where
+        else:
+            select_stmt += " WITH (NOLOCK)"
 
         # Where-claues for incremental replication
         if replication_key:
