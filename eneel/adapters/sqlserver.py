@@ -626,8 +626,7 @@ class Database:
                         " if exists(" +
                         "    select *" +
                         " from sys.indexes where" +
-                        "name = 'tac333_lnd_BRA_BRANCHES_tmp_cci' and object_id = object_id("
-                        "'tac333_lnd.BRA_BRANCHES'))" +
+                        " name = '"+ index_name +"tac333_lnd_BRA_BRANCHES_tmp_cci""' and object_id = object_id('" + schema_table + "'))" +
                         " drop index " + schema_table + "." + index_name
                     )
                     self.execute(
@@ -745,4 +744,4 @@ from  """
         sql += " (log_time, project, project_started_at, source_table, target_table, started_at, ended_at, status, exported_rows, imported_rows)"
         sql += " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-        self.execute(sql, row)
+        self.ex
