@@ -622,7 +622,13 @@ class Database:
                 try:
                     index_name = schema + "_" + table + "_cci"
                     self.execute(
-                        "DROP INDEX IF EXISTS " + index_name + " ON " + schema_table
+                        #"DROP INDEX IF EXISTS " + index_name + " ON " + schema_table
+                        " if exists(" +
+                        "    select *" +
+                        " from sys.indexes where" +
+                        "name = 'tac333_lnd_BRA_BRANCHES_tmp_cci' and object_id = object_id("
+                        "'tac333_lnd.BRA_BRANCHES'))" +
+                        " drop index " + schema_table + "." + index_name
                     )
                     self.execute(
                         "CREATE CLUSTERED COLUMNSTORE INDEX "
